@@ -1,6 +1,0 @@
-Admin can edit, and delete both users and posts
-Admin can chaose who is admin.
-
-create a multiparts routes for user image management
-create admin role.
-add admin delete and add fuctions for declaring who is admin and who is not
