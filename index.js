@@ -19,7 +19,7 @@ const io = socketio(server)
 
 
 
-mongoose.connect("mongodb+srv://antwan:comodor29@cluster0.ncriv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", {
+mongoose.connect("mongodb+srv://antwan:comodor29@cluster0.ncriv.mongodb.net/Siara?retryWrites=true&w=majority", {
         useNewUrlParser: true
     }).then(db => {
         console.log("db secured")
