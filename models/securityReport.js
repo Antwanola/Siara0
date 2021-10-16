@@ -53,6 +53,9 @@ pOccurence:{
     report:{
         type:String,
         
+    },
+    status:{
+        type: String
     }
 
 

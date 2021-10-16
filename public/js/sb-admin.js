@@ -48,4 +48,25 @@
     x.className = "show";
     setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
   })
+  //toggle
+  $(function toggleStatus(){
+  $('.switch').on('click', 'input', function(){
+    if($(this)[0].checked){
+      (async () => {
+        const rawResponse = await fetch('http://siara-health.herokuapp.com/api/incident', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: ({isChecked: true})
+        });
+        const content = await rawResponse.json();
+      
+        console.log(content);
+      })();
+      
+    }
+  })
+  })
 })(jQuery); // End of use strict

@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {authorizationToken} = require('../controllers/authController')
+// const {authorizationToken} = require('../controllers/authController')
 
 //App Route
 router.use('/api', require('./app/Auth'))

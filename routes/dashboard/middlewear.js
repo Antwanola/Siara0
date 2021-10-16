@@ -113,6 +113,7 @@ module.exports = {
                 res.render('admin/incident/incidentList', {
                     payload
                 })
+        
             })
             .catch(err => {
                 res.status(401).json({
@@ -145,6 +146,7 @@ module.exports = {
     //Put Incident
     putIncident: (req, res, next) => {
         const {
+            status,
             street,
             lga,
             state,
@@ -177,6 +179,7 @@ module.exports = {
                 payload.eResponse = eResponse;
                 payload.eResponse_needed = eResponse_needed;
                 payload.anonymous = anonymous;
+                payload.status = status;
                 payload.report = report;
 
 

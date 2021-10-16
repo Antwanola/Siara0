@@ -24,26 +24,33 @@ register:(req, res, next)=>{
       email: req.body.email,
       phone: req.body.phone
   })
-  user.findOne({phone:User.phone}).then(payload=>{
-    console.log(User)
-    
-  if(payload == null){
-  User.save().then(saved=>{
+  try {
+    user.findOne({phone:User.phone}).then(payload=>{
+     
       
-      const accessToken =  generateToken(saved.id)
-      const refreshToken = Jwt.sign({id:saved.id}, process.env.REFRESH_TOKEN)
-      req.accessToken = accessToken
-      res.status(200).json({ accessToken, refreshToken,  saved })
-  })    
-  
-  }
-     else{
-      if(payload.phone == User.phone || payload.email == User.email){
-          res.status(403).send('User already exist ')
-      }
-  }
-    next()
-  })
+    if(payload == null){
+    User.save().then(saved=>{
+        
+        const accessToken =  generateToken(saved.id)
+        const refreshToken = Jwt.sign({id:saved.id}, process.env.REFRESH_TOKEN)
+        req.accessToken = accessToken
+        res.status(200).json({ accessToken, refreshToken,  saved })
+    })    
+    
+    }
+       else{
+        if(payload.phone == User.phone || payload.email == User.email){
+            res.status(403).send('User already exist ')
+        }
+    }
+      next()
+      
+    })
+    
+  } catch (error) {
+    res.send(error.message)
+    
+  } 
   
   },
   login:(req, res, next)=>{

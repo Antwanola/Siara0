@@ -60,6 +60,9 @@ service_feedback:{
 anonymous:{
     type:String,
 },
+status:{
+    type: String
+}
 
 
 

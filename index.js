@@ -6,20 +6,28 @@ const mongoose = require('mongoose')
 const session = require('express-session')
 const flash = require('connect-flash')
 const methodOverride = require('method-override')
-const {select} = require('./helpers/generalHelpers')
+const {select, toggleStatus} = require('./helpers/generalHelpers')
 const cookieParser = require('cookie-parser')
 const passport = require('passport')
 const socketio = require('socket.io')
 const errorHandler=  require('./helpers/errorHandler')
+const user = require('./models/user')
 const http = require('http')
 const formatMessage = require('./utils/message')
-
+const chatUser = require('./utils/chatUser')
+const swaggerUi = require('swagger-ui-express')
+const swaggerJsdoc = require('swagger-jsdoc')
 const server = http.createServer(App)
 const io = socketio(server)
+io.use((socket, next)=>{
+    sessionMiddle(socket.request, {}, next)
+})
 
 
 
-mongoose.connect("mongodb+srv://antwan:comodor29@cluster0.ncriv.mongodb.net/Siara?retryWrites=true&w=majority", {
+
+
+mongoose.connect("mongodb+srv://antwan:comodor29@cluster0.ncriv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", {
         useNewUrlParser: true
     }).then(db => {
         console.log("db secured")
@@ -28,35 +36,34 @@ mongoose.connect("mongodb+srv://antwan:comodor29@cluster0.ncriv.mongodb.net/Siar
         console.log(err)
     })
 
+    //swagger options 
+    const options={
+        definition :{
+            openapi:"3.0.0",
+            info:{
+                title:" Siara Health App", 
+                version:"1.0.0",
+                description: "The siara api for data collection"
+            },
+            servers:[
+                {
+                    url: 'http://localhost:3200/api'
+                }
+            ]
+            
+        },
+        apis:['./routes/app/*.js']
+    }
+
+    const specs = swaggerJsdoc(options)
+
 // serving files as static
 App.use(Express.static(path.join(__dirname, 'public')))
 
 
-const botName = 'Siara Bot'
-io.on('connection', socket=>{
-    console.log(`we connected to socket `)
-    
-    
-    
-    //Welcome current user
-    socket.emit('message', formatMessage(botName,' Welcome to Siara Health services '))
-    //Broadcast when a user is connectd
-    socket.broadcast.emit('message', formatMessage(botName,'this is for all to see except connecting client'))
 
-    //Run disconnect
-    socket.on('disconnect', ()=>{
-        io.emit('message', formatMessage(botName,'a user have left the chat'))
-
-        //Catch Message
-       
-    })
-    socket.on('chatMessage', (msg)=>{
-        io.emit('message',   formatMessage('USER', msg))
-    })
-
-})
 // Set view engine
-App.engine('handlebars', handlebars({defaultLayout:'login', helpers:{select}}));
+App.engine('handlebars', handlebars({defaultLayout:'login', helpers:{select, toggleStatus}}));
 App.set('view engine', 'handlebars');
 
 
@@ -74,13 +81,14 @@ App.use(Express.json())
 
 //Session
 App.use(cookieParser());
-App.use(session({
+const sessionMiddle = (session({
 
     secret: 'ajhsbjhafb774364',
     resave: true,
     saveUninitialized: true
 
 }));
+App.use(sessionMiddle)
 
 
 // PASSPORT
@@ -109,8 +117,43 @@ const adminAuth = require('./routes/login/index')
 App.use('/', apihome)
 App.use("/admin",admin)
 App.use("/",adminAuth)
+App.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 
+const botName = 'Siara Bot'
+let logedInUser;
+io.on('connection',  async socket=>{
+     
+    var userId = await socket.request.session.passport.user;
+    await user.findOne({_id:userId}).then(user=>{
+        // console.log(user.name)
+        return logedInUser = user
+    })
+    .catch(err=>{
+        console.log(err.message)
+    })
+
+   
+    
+   
+    socket.emit('user', logedInUser)
+    //Welcome current user
+    socket.emit('message', formatMessage(botName,' Welcome to Siara Health services '))
+    //Broadcast when a user is connectd
+    socket.broadcast.emit('message', formatMessage(botName,'this is for all to see except connecting client'))
+
+    //Run disconnect
+    socket.on('disconnect', ()=>{
+        io.emit('message', formatMessage(botName,'a user have left the chat'))
+
+        //Catch Message
+       
+    })
+    socket.on('chatMessage', (msg)=>{
+        io.emit('message',   formatMessage(logedInUser, msg))
+    })
+ 
+})
 
 const port = process.env.PORT || 3200;
 
