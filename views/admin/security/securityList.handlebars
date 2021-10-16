@@ -15,6 +15,7 @@
                   <th>Location</th>
                   <th>Time</th>
                   <th>Report</th>
+                  <th>Status</th>
                   <th>Edit</th>
                   <th>Delete</th>
                   
@@ -26,6 +27,7 @@
                   <th>Location</th>
                   <th>Time & Date</th>
                   <th>Report</th>
+                  <th>Status</th>
                   <th>Edit</th>
                   <th>Delete</th>
                 </tr>
@@ -37,6 +39,7 @@
                   <td>{{state}}, {{lga}}, {{street}}</td>
                   <td>{{time}}<br>{{date}}</td>
                   <td>{{report}}</td>
+                  <td>{{status}}</td>
                    <td><a href="/admin/security/edit/{{_id}}" class="btn btn-info">Edit</a></td>
                  <td> 
                     <form action="/admin/security/delete/{{_id}}?_method=DELETE" method="post">

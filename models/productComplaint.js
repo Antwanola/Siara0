@@ -56,6 +56,9 @@ const complaint = new Schema({
     anonymous: {
         type: String,
     },
+    status:{
+        type: String
+    }
 
 
 

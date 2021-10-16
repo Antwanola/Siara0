@@ -46,6 +46,9 @@ const accident = new Schema({
     report:{
         type:String,
         required:true
+    },
+     status:{
+        type: String
     }
 
 

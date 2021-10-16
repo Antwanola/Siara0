@@ -49,6 +49,9 @@ const incident = new Schema({
     report:{
         type:String,
        
+    },
+    status:{
+        type: String
     }
 
 
