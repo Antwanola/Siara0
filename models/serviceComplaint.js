@@ -63,6 +63,7 @@ anonymous:{
 },
 status:{
     type: String
+<<<<<<< HEAD
 },
 attended:{
         type:String
@@ -70,6 +71,8 @@ attended:{
 postedTime:{
     type:Date,
     default:new Date()
+=======
+>>>>>>> b012c2a30d1f81c846e4bff9564c7756c8998261
 }
 
 

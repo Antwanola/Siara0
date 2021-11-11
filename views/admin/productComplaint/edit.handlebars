@@ -86,12 +86,21 @@
     </div> --}}
 
      <div class="form-group">
+<<<<<<< HEAD
         <label for="status"> Status</label>
         
         <select name="status" id="status" class="form-control">
             {{#select payload.attended}}
              <option value="attended">Attended</option>
             <option value="pending">Unattended</option>
+=======
+        <label for="status">Incident Status</label>
+        
+        <select name="status" id="status" class="form-control">
+            {{#select payload.status}}
+             <option value="attended">Attended</option>
+            <option value="pending">no</option>
+>>>>>>> b012c2a30d1f81c846e4bff9564c7756c8998261
             
             {{/select}}
         </select>

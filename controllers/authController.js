@@ -31,10 +31,19 @@ register:(req, res, next)=>{
      
       
     if(payload == null){
+<<<<<<< HEAD
     User.save().then(saved=>{        
         const accessToken =  generateToken(saved.id)
         const refreshToken = Jwt.sign({id:saved.id}, process.env.REFRESH_TOKEN, {expiresIn :60* 60*24*7})        
         res.status(200).json({ accessToken, saved })
+=======
+    User.save().then(saved=>{
+        
+        const accessToken =  generateToken(saved.id)
+        const refreshToken = Jwt.sign({id:saved.id}, process.env.REFRESH_TOKEN)
+        req.accessToken = accessToken
+        res.status(200).json({ accessToken, refreshToken,  saved })
+>>>>>>> b012c2a30d1f81c846e4bff9564c7756c8998261
     })    
     
     }
@@ -43,7 +52,10 @@ register:(req, res, next)=>{
             res.status(403).send('User already exist ')
         }
     }
+<<<<<<< HEAD
      
+=======
+>>>>>>> b012c2a30d1f81c846e4bff9564c7756c8998261
       next()
       
     })
