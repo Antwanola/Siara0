@@ -2,10 +2,11 @@ const mongoose =  require('mongoose')
 const Schema = mongoose.Schema
 
 const environReport = new Schema({
-    user:{
+    user:[{
         type:Schema.Types.ObjectId,
-        ref:'users'
-    },
+        ref: 'users',
+        required: true
+    }],
     name:{
         type: String,   
        }, 
@@ -53,10 +54,19 @@ pOccurence:{
     report:{
         type:String,
         
+    },
+    status:{
+        type: String
+    },
+    attended:{
+        type:String
+    },
+    postedTime:{
+        type:Date,
+        default:new Date()
     }
-
 
 
 })
 
-module.exports = mongoose.model('Environmental Report', environReport)
+module.exports = mongoose.model('environmentalReport', environReport)

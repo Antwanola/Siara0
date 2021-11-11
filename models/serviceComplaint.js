@@ -3,10 +3,11 @@ const Schema = mongoose.Schema
 
 
 const serviceComplaint = new Schema({
-    user: {
-        type: Schema.Types.ObjectId,
-        ref: 'Users'
-    },
+    user:[{
+        type:Schema.Types.ObjectId,
+        ref: 'users',
+        required: true
+    }],
 
  name:{
     type: String,   
@@ -60,9 +61,19 @@ service_feedback:{
 anonymous:{
     type:String,
 },
+status:{
+    type: String
+},
+attended:{
+        type:String
+    },
+postedTime:{
+    type:Date,
+    default:new Date()
+}
 
 
 
 })
 
-module.exports = mongoose.model('service complaint',  serviceComplaint)
+module.exports = mongoose.model('serviceComplaint',  serviceComplaint)

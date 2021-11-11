@@ -1,5 +1,3 @@
-const user= require('../models/user')
-
 module.exports = {
 
     userAuth:(req,res, next)=>{
@@ -11,6 +9,7 @@ module.exports = {
     
     },
     isAdmin:(req, res, next)=>{
+        
         if(req.user.role ==='admin'){
             return  next()
         }

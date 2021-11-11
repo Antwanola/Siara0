@@ -2,9 +2,11 @@ const mongoose =  require('mongoose')
 const Schema = mongoose.Schema
 
 const emergency = new Schema({
-    username:{
-        type: String,   
-       }, 
+    user:[{
+        type:Schema.Types.ObjectId,
+        ref: 'users',
+        required: true
+    }],
        phone:{
            type:String
        },
@@ -49,10 +51,17 @@ pOccurence:{
     report:{
         type:String,
         
+    },
+    attended:{
+        type:String,
+    },
+    postedTime:{
+        type:Date,
+        default:new Date()
     }
 
 
 
 })
 
-module.exports = mongoose.model('Emergency Report', emergency)
+module.exports = mongoose.model('emergencyReport', emergency)

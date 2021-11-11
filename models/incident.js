@@ -1,11 +1,12 @@
-const mongoose =  require('mongoose')
+const mongoose =  require("mongoose")
 const Schema = mongoose.Schema
 
 const incident = new Schema({
-    user:{
+    user:[{
         type: Schema.Types.ObjectId,
-        ref:'users'
-    },
+        ref:'users',
+       
+    }],
     
     name:{
         type: String,   
@@ -49,11 +50,20 @@ const incident = new Schema({
     report:{
         type:String,
        
+    },
+    status:{
+        type: String
+    },
+    attended:{
+        type:String
+    },
+    postedTime:{
+        type:Date,
+        default:new Date()
     }
-
 
 
 
 })
 
-module.exports = mongoose.model('Incident', incident)
+module.exports = mongoose.model('incident', incident)

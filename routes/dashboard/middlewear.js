@@ -53,7 +53,8 @@ module.exports = {
             eResponse_needed,
             report,
             name,
-            phone
+            phone,
+            attended
         } = req.body
         accident.findByIdAndUpdate({
                 _id: req.params.id
@@ -74,6 +75,7 @@ module.exports = {
                 payload.eResponse_needed = eResponse_needed;
                 payload.anonymous = anonymous;
                 payload.report = report;
+                payload.attended = attended
 
 
                 payload.save().then(saved => {
@@ -113,6 +115,7 @@ module.exports = {
                 res.render('admin/incident/incidentList', {
                     payload
                 })
+        
             })
             .catch(err => {
                 res.status(401).json({
@@ -145,6 +148,7 @@ module.exports = {
     //Put Incident
     putIncident: (req, res, next) => {
         const {
+            status,
             street,
             lga,
             state,
@@ -154,7 +158,8 @@ module.exports = {
             time,
             report,
             eResponse,
-            eResponse_needed
+            eResponse_needed,
+            attended
         } = req.body
         incident.findByIdAndUpdate({
                 _id: req.params.id
@@ -177,7 +182,9 @@ module.exports = {
                 payload.eResponse = eResponse;
                 payload.eResponse_needed = eResponse_needed;
                 payload.anonymous = anonymous;
+                payload.status = status;
                 payload.report = report;
+                payload.attended = attended
 
 
                 payload.save().then(saved => {
@@ -301,7 +308,8 @@ module.exports = {
             pOccurence_detail,
             age,
             sex,
-            pOccurence
+            pOccurence,
+            attended
         } = req.body
         healthReport.findByIdAndUpdate({
                 _id: req.params.id
@@ -330,6 +338,7 @@ module.exports = {
                 payload.eResponse_needed = eResponse_needed;
                 payload.anonymous = anonymous;
                 payload.report = report;
+                payload.attended = attended
 
 
                 payload.save().then(saved => {
@@ -422,7 +431,8 @@ module.exports = {
             pOccurence_detail,
             age,
             sex,
-            pOccurence
+            pOccurence,
+            attended
         } = req.body
         securityReport.findByIdAndUpdate({
                 _id: req.params.id
@@ -446,6 +456,7 @@ module.exports = {
                 payload.eResponse_needed = eResponse_needed;
                 payload.anonymous = anonymous;
                 payload.report = report;
+                payload.attended = attended
 
 
                 payload.save().then(saved => {
@@ -517,7 +528,7 @@ editServiceComplaint: (req, res,next) => {
 },
 //update
 updateServiceComplaint:(req, res, next)=>{
-    const {name, phone, state,lga, street, date, time, service_description, complaint_narration, provider_name, agreement_detail, complaint_evidence, service_feedback, anonymous} =req.body
+    const {name, phone, state,lga, street, date, time, service_description, complaint_narration, provider_name, agreement_detail, complaint_evidence, service_feedback,attended, anonymous} =req.body
 serviceComplaint.findOneAndUpdate({_id:req.params.id}).then(payload=>{
     let anonymous = true
 
@@ -539,6 +550,7 @@ serviceComplaint.findOneAndUpdate({_id:req.params.id}).then(payload=>{
     payload.complaint_evidence = complaint_evidence;
     payload.service_feedback = service_feedback;
     payload.anonymous = anonymous;
+    payload.attended = attended
     
     payload.save().then(saved=>{
         res.redirect('/admin/service-complaint')
@@ -618,7 +630,8 @@ deleteServiceComplaint: async (req, res, next) => {
             eResponse,
             eResponse_needed,
             pOccurence_detail,
-            pOccurence
+            pOccurence,
+            attended
         } = req.body
         await environmentalReport.findByIdAndUpdate({
                 _id: req.params.id
@@ -642,6 +655,7 @@ deleteServiceComplaint: async (req, res, next) => {
                 payload.eResponse_needed = eResponse_needed;
                 payload.anonymous = anonymous;
                 payload.report = report;
+                payload.attended = attended
 
 
                 payload.save().then(saved => {
@@ -792,7 +806,8 @@ deleteServiceComplaint: async (req, res, next) => {
             eResponse,
             eResponse_needed,
             pOccurence_detail,
-            pOccurence
+            pOccurence,
+            attended
         } = req.body
         emergencyReport.findByIdAndUpdate({
                 _id: req.params.id
@@ -815,6 +830,7 @@ deleteServiceComplaint: async (req, res, next) => {
                 payload.eResponse_needed = eResponse_needed;
                 payload.anonymous = anonymous;
                 payload.report = report;
+                payload.attended = attended
 
                 payload.save().then(saved => {
                         res.redirect('/admin/emergency')
@@ -887,7 +903,8 @@ deleteServiceComplaint: async (req, res, next) => {
             batch_number,
             product_narration,
             supplier,
-            expiry_date
+            expiry_date, 
+            attended
         } = req.body
         productComplaint.findByIdAndUpdate({
                 _id: req.params.id
@@ -911,6 +928,7 @@ deleteServiceComplaint: async (req, res, next) => {
                 payload.supplier = supplier;
                 payload.expiry_date = expiry_date;
                 payload.anonymous = anonymous;
+                payload.attended = attended
                
                 console.log(payload)
                 payload.save().then(saved => {

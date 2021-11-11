@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
-const schema = mongoose.Schema
+const Schema = mongoose.Schema
 
-const user = new schema({
+const User = new Schema({
     name:{
         type:String,
-        required: true
+         required: true,
     },
     email:{
         type:String,
@@ -26,7 +26,56 @@ const user = new schema({
     },
     role:{
         type:String
-    }
+    },
+    createdTime:{
+        type:Date,
+        default:new Date()
+    }, 
+accident:[{        
+            type:Schema.Types.ObjectId,
+            ref: 'accident',
+                   
+    }],
+emergencyReport:[{        
+        type:Schema.Types.ObjectId,
+        ref: 'emergencyReport',
+               
+}],
+environmentalReport:[{        
+    type:Schema.Types.ObjectId,
+    ref: 'environmentalReport',
+           
+}],
+healthReport:[{        
+    type:Schema.Types.ObjectId,
+    ref: 'healthReport',
+           
+}],
+incident:[{        
+    type:Schema.Types.ObjectId,
+    ref: 'incident',
+           
+}],
+productComplaint:[{        
+    type:Schema.Types.ObjectId,
+    ref: 'productComplaint',
+           
+}],
+securityReport:[{        
+    type:Schema.Types.ObjectId,
+    ref: 'securityReport',
+           
+}],
+serviceComplaint:[{        
+    type:Schema.Types.ObjectId,
+    ref: 'serviceComplaint',
+           
+}],
+notification:[{        
+    type:Schema.Types.ObjectId,
+    ref: 'notification',
+           
+}],
 
 })
-module.exports = mongoose.model('users', user)
+module.exports = mongoose.model('users', User)

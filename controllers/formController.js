@@ -6,13 +6,89 @@ const environmentalReport = require('../models/environmentalReport')
 const emergencyReport = require('../models/emergencyReport')
 const productComplaint = require('../models/productComplaint')
 const serviceComplaint = require('../models/serviceComplaint');
-const { isEmpty } = require('../helpers/formHelpers')
+const notification = require('../models/notification')
+const users = require('../models/user')
+
+const moment = require('moment')
+
+
+// function notifications(data){
+      
+//     const myCurrentDate=new Date();
+//     const myPastDate=new Date(myCurrentDate);
+//     const calcDate = myPastDate.setDate(myPastDate.getDate() - 7)
+//     // if(myCurrentDate> data.postedTime.){
+//     //     console.log(true)
+//     // }
+//     console.log(myCurrentDate)
+//     console.log(moment(calcDate).format('LL'))
+// }
 
 
 module.exports={
-    Incident:(req, res, next)=>{
-        const payload =new incident({
-            // user:req.user._Id,
+
+
+    newDataSort:(req, res, next)=>{
+
+
+        console.log(req.user.User._id)
+        users.find({user:req.user.User._id})
+        .populate('incident')
+        .populate('environmentalReport')
+        .populate('accident')
+        .populate('emergencyReport')
+        .populate('healthReport')
+        .populate('productComplaint')
+        .populate('securityReport')
+        .populate('serviceComplaint')
+        .then(result =>{
+           
+                res.status(200).json(result)
+            
+            
+            // result.sort().limit(1).then(sorted=>{
+            //     console.log(sorted)
+            // })
+            
+        })
+        .catch(err=>{
+            res.status(401).json({error:err.message})
+        })
+        next()
+
+        
+
+},
+
+    // postNotification:(req, res, next)=>{
+    //     const {note} = req.body;
+    // },
+    
+    history:(req, res, next)=>{
+        console.log(req.user.User._id)
+        users.findById({_id:req.user.User._id})
+        .populate({path:'incident'})
+        .populate('environmentalReport')
+        .populate('accident')
+        .populate('emergencyReport')
+        .populate('healthReport')
+        .populate('productComplaint')
+        .populate('securityReport')
+        .populate('serviceComplaint')
+        .then(result =>{
+            res.status(200).json(result)
+            console.log(result)
+        })
+        .catch(err=>{
+            res.status(401).json({error:err.message})
+        })
+        next()
+
+       
+},
+    Incident: (req, res, next)=>{
+        const payload ={
+            user:req.user.User._id,
             street: req.body.street,
             lga:req.body.lga,
             state:req.body.state,
@@ -23,22 +99,56 @@ module.exports={
             eResponse_needed:req.body.eResponse_needed,
             anonymous:req.body.anonimous,
             username:req.body.name,
-            phone: req.body.phone
+            phone: req.body.phone,
+            
+        }
+        
+        incident.create(payload, (err, data)=>{
+            
+            users.findOneAndUpdate({_id:req.user.User._id}, {$push:{incident:data._id}}, {new:true}).then(user=>{
+                res.status(200).json(user)
+
+            })
+            // const noteData = {
+            //     user:req.user.User._id,
+            //     incident:data._id,
+            // }
+            // notification.create(noteData).then(note=>{
+            //     res.status(200).json(note)
+            // })
+            .catch(err=>{
+                if(err)
+                res.status(400).json({err:err.message})
+            })
         })
-        payload.save().then(saved=>{
-            console.log({user:saved.user})
-            if(saved) res.status(200).json({saved})
-        })
-        .catch(err=>{
-            if(err)
-            res.status(400).json({err:err.message})
-        })
+       
         next()
     },
 
+    
+       
+        
+
+
+
+        // payload.save().then(saved=>{
+            
+        // users.findByIdAndUpdate({_id:saved.user}, {$set:{incident:saved._id}}).then((result)=>{
+        //     console.log(result)
+        // })
+                // const userPayload = new users({incident:saved._id})
+                // userPayload.save().then(userSaved=>{console.log(userSaved)})
+            
+
+            // newDataSort(incident)
+            // notifications(saved)
+            // if(saved) res.status(200).json({saved})
+            // newDataSort(incident)
+      
+
     accident:(req, res, next)=>{
-        const payload =new accident( {
-            // user:req.user._Id,
+        const payload = {
+            user:req.user.User._id,
             street: req.body.street,
             lga:req.body.lga,
             state:req.body.state,
@@ -50,18 +160,33 @@ module.exports={
             anonymous:req.body.anonimous,
             username:req.body.name,
             phone: req.body.phone
+            }
+            accident.create(payload, (err, data)=>{
+            
+                users.findOneAndUpdate({_id:req.user.User._id}, {$push:{accident:data._id}}, {new:true}).then(user=>{
+              
+                    // const noteData = {
+                    //     user:req.user.User._id,
+                    //    accident:data._id,
+                    // }
+                    // notification.create(noteData).then(note=>{
+                    //     res.status(200).json(note)
+                    // })
+                    res.status(200).json(user)
+               
+                
+                })
+                .catch(err=>{
+                    if(err)
+                    res.status(400).json({err:err.message})
+                })         
+               
             })
-           payload.save().then(saved=>{
-              if(saved) return res.status(200).json({saved})
-           })
-           .catch(err=>{
-           if(err) return res.status(400).json({err:err.message})
-        })
-        next()
+            next()
     },
     healthReport:(req, res, next)=>{
-        const payload =new healthReport( {
-            // user:req.user._Id,
+        const payload = {
+            user:req.user.User._id,
             street: req.body.street,
             lga:req.body.lga,
             state:req.body.state,
@@ -77,19 +202,30 @@ module.exports={
             anonymous:req.body.anonymous,
             username:req.body.name,
             phone: req.body.phone
+            }
+
+            healthReport.create(payload, (err, data)=>{
+            users.findOneAndUpdate({_id:req.user.User._id}, {$push:{healthReport:data._id}}).then(user=>{
+                // const noteData = {
+                //     user:req.user.User._id,
+                //     healthReport:data._id,
+                // }
+                // notification.create(noteData).then(note=>{
+                //     res.status(200).json(note)
+                // }) 
+                res.status(200).json(user)
             })
-           payload.save().then(saved=>{
-              if(saved) return res.status(200).json({saved})
-           })
-           .catch(err=>{
-           if(err) return res.status(400).json({err:err.message})
-        })
-        next()
-    },
+            .catch(err=>{
+                if(err)
+                res.status(400).json({err:err.message})
+            })   
+            next()
+    })
+},
 
     security:(req, res, next)=>{
-        const payload =new securityReport( {
-            // user:req.user._Id,
+        const payload ={
+            user:req.user.User._id,
             street: req.body.street,
             lga:req.body.lga,
             state:req.body.state,
@@ -103,20 +239,25 @@ module.exports={
             anonymous:req.body.anonymous,
             username:req.body.name,
             phone: req.body.phone
-            })
-           payload.save().then(saved=>{
-              if(saved) return res.status(200).json({saved})
-           })
-           .catch(err=>{
-           if(err) return res.status(400).json({err:err.message})
-        })
-        next()
+            }
+            securityReport.create(payload, (err, data)=>{
+                users.findOneAndUpdate({_id:req.user.User._id}, {$push:{securityReport:data._id}}).then(user=>{
+                      
+                    res.status(200).json(user)
+                    })
+                    .catch(err=>{
+                        if(err)
+                        res.status(400).json({err:err.message})
+                    })         
+                   
+                })
+                next()
     },
 
     envReport:(req, res, next)=>{
 
-        const payload = new environmentalReport({
-            // user:req.user._Id,
+        const payload = {
+            user:req.user.User._id,
             street: req.body.street,
             lga: req.body.lga,
             state: req.body.state,
@@ -130,22 +271,23 @@ module.exports={
             anonymous: req.body.anonymous,
             username: req.body.name,
             phone: req.body.phone
-        })
-        payload.save().then(saved => {
-                if (saved) return res.status(200).json({
-                    saved
+        }
+        environmentalReport.create(payload, (err, data)=>{
+            users.findOneAndUpdate({_id:req.user.User._id}, {$push:{environmentalReport:data._id}}).then(user=>{
+                    
+                res.status(200).json(user)
                 })
-            })
-            .catch(err => {
-                if (err) return res.status(400).json({
-                    err: err.message
-                })
+                .catch(err=>{
+                    if(err)
+                    res.status(400).json({err:err.message})
+                })         
+               
             })
             next()
     },
     emergReport:(req, res, next)=>{
-        const payload = new emergencyReport({
-            // user:req.user._Id,
+        const payload = {
+            user:req.user.User._id,
             street: req.body.street,
             lga: req.body.lga,
             state: req.body.state,
@@ -159,23 +301,30 @@ module.exports={
             anonymous: req.body.anonymous,
             username: req.body.name,
             phone: req.body.phone
-        })
-        payload.save().then(saved => {
-                if (saved) return res.status(200).json({
-                    saved
-                })
+        }
+        emergencyReport.create(payload, (err, data)=>{
+            users.findOneAndUpdate({_id:req.user.User._id}, {$push:{emergencyReport:data._id}}).then(user=>{
+                res.status(200).json(user)
+                // const noteData = {
+                //     user:req.user.User._id,
+                //     healthReport:data._id,
+                // }
+                // notification.create(noteData).then(note=>{
+                //     res.status(200).json(note)
+                // }) 
+               
             })
-            .catch(err => {
-                if (err) return res.status(400).json({
-                    err: err.message
-                })
-            })
+            .catch(err=>{
+                if(err)
+                res.status(400).json({err:err.message})
+            })   
             next()
+    })
     },
 
     prodComplaint:(req, res, next)=>{
-        const payload = new productComplaint({
-            // user:req.user._Id,
+        const payload = {
+            user:req.user.User._id,
             street: req.body.street,
             lga: req.body.lga,
             state: req.body.state,
@@ -190,23 +339,30 @@ module.exports={
             anonymous: req.body.anonymous,
             username: req.body.name,
             phone: req.body.phone
-        })
-        payload.save().then(saved => {
-                if (saved) return res.status(200).json({
-                    saved
-                })
+        }
+        productComplaint.create(payload, (err, data)=>{
+            users.findOneAndUpdate({_id:req.user.User._id}, {$push:{productComplaint:data._id}}).then(user=>{
+                res.status(200).json(user)
+                // const noteData = {
+                //     user:req.user.User._id,
+                //     healthReport:data._id,
+                // }
+                // notification.create(noteData).then(note=>{
+                //     res.status(200).json(note)
+                // }) 
+               
             })
-            .catch(err => {
-                if (err) return res.status(400).json({
-                    err: err.message
-                })
-            })
+            .catch(err=>{
+                if(err)
+                res.status(400).json({err:err.message})
+            })   
             next()
+    })
     },
     servComplaint:(req, res, next)=>{
-        const payload = new serviceComplaint({
-
-            // user:req.user._Id,
+        const payload = {
+            
+            user:req.user.User._id,
             street: req.body.street,
             lga: req.body.lga,
             state: req.body.state,
@@ -221,17 +377,19 @@ module.exports={
             anonymous: req.body.anonymous,
             username: req.body.name,
             phone: req.body.phone
-        })
-          payload.save().then(saved => {
-                if (saved) return res.status(200).json({
-                    saved
+        }
+        serviceComplaint.create(payload, (err, data)=>{
+            users.findOneAndUpdate({_id:req.user.User._id}, {$push:{serviceComplaint:data._id}}).then(user=>{
+                    
+                res.status(200).json(user)
                 })
+                .catch(err=>{
+                    if(err)
+                    res.status(400).json({err:err.message})
+                })         
+               
             })
-            .catch(err => {
-                if (err) return res.status(400).json({
-                    err: err.message
-                })
-            })
+            next()
 
     }
     

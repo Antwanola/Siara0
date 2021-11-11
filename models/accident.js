@@ -2,10 +2,11 @@ const mongoose =  require('mongoose')
 const Schema = mongoose.Schema
 
 const accident = new Schema({
-    user:{
+    user:[{
         type:Schema.Types.ObjectId,
-        ref: 'users'
-    },
+        ref: 'users',
+        required: true
+    }],
     name:{
         type: String,   
        }, 
@@ -46,10 +47,20 @@ const accident = new Schema({
     report:{
         type:String,
         required:true
+    },
+     status:{
+        type: String
+    },
+    attended:{
+        type:String
+    },
+    postedTime:{
+        type:Date,
+        default:new Date()
     }
 
 
 
 })
 
-module.exports = mongoose.model('Accident', accident)
+module.exports = mongoose.model('accident', accident)
