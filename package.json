@@ -45,12 +45,8 @@
     "sessions": "0.0.2-7",
     "socket.io": "^4.2.0",
     "swagger-jsdoc": "^6.1.0",
-<<<<<<< HEAD
     "swagger-ui-express": "^4.1.6",
     "web-push": "^3.4.5"
-=======
-    "swagger-ui-express": "^4.1.6"
->>>>>>> b012c2a30d1f81c846e4bff9564c7756c8998261
   },
   "devDependencies": {
     "nodemon": "^2.0.12"

@@ -451,11 +451,7 @@ router.post('/incident', authenticationToken, Incident, () => {})
  *         404:
  *            description: bad request
  */
-<<<<<<< HEAD
 router.post('/accident', authenticationToken, accident, () => {})
-=======
-router.post('/accident', accident, () => {})
->>>>>>> b012c2a30d1f81c846e4bff9564c7756c8998261
 
 //health report 
 
@@ -476,11 +472,7 @@ router.post('/accident', accident, () => {})
  *         404:
  *            description: bad request
  */
-<<<<<<< HEAD
 router.post('/health-report',  authenticationToken, healthReport, () => {})
-=======
-router.post('/health-report', healthReport, () => {})
->>>>>>> b012c2a30d1f81c846e4bff9564c7756c8998261
 
 //security
 /**
@@ -501,11 +493,7 @@ router.post('/health-report', healthReport, () => {})
  *            description: bad request
  */
 
-<<<<<<< HEAD
 router.post('/security', authenticationToken, security, () => {})
-=======
-router.post('/security', security, () => {})
->>>>>>> b012c2a30d1f81c846e4bff9564c7756c8998261
 
 //Environmental report
 /**
@@ -525,11 +513,7 @@ router.post('/security', security, () => {})
  *         404:
  *            description: bad request
  */
-<<<<<<< HEAD
 router.post('/environmental-report', authenticationToken, envReport, () => {})
-=======
-router.post('/environmental-report', envReport, () => {})
->>>>>>> b012c2a30d1f81c846e4bff9564c7756c8998261
 
 //Emergency report
 /**
@@ -549,11 +533,7 @@ router.post('/environmental-report', envReport, () => {})
  *         404:
  *            description: bad request
  */
-<<<<<<< HEAD
 router.post('/emergency-report', authenticationToken, emergReport, () => {})
-=======
-router.post('/emergency-report',emergReport, () => {})
->>>>>>> b012c2a30d1f81c846e4bff9564c7756c8998261
 //Product complaint
 /**
  * @swagger
@@ -572,11 +552,7 @@ router.post('/emergency-report',emergReport, () => {})
  *         404:
  *            description: bad request
  */
-<<<<<<< HEAD
 router.post('/product-complaint',authenticationToken, prodComplaint, () => {})
-=======
-router.post('/product-complaint', prodComplaint, () => {})
->>>>>>> b012c2a30d1f81c846e4bff9564c7756c8998261
 
 //Service complaint
 /**
@@ -596,7 +572,6 @@ router.post('/product-complaint', prodComplaint, () => {})
  *         404:
  *            description: bad request
  */
-<<<<<<< HEAD
 router.post('/service-complaint', authenticationToken, servComplaint, () => {})
 
 /**
@@ -647,9 +622,6 @@ router.get('/history', authenticationToken, history, () => {})
  */
 
 router.get('/notification', authenticationToken, newDataSort, () => {})
-=======
-router.post('/service-complaint', servComplaint, () => {})
->>>>>>> b012c2a30d1f81c846e4bff9564c7756c8998261
 
 //Profile
 

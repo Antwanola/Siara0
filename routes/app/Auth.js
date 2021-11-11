@@ -1,11 +1,7 @@
 require('dotenv').config();
 const express = require('express')
 const router = express.Router()
-<<<<<<< HEAD
 const {register,login, authenticationToken, logout, getProfile, updateProfile} = require('../../controllers/authController');
-=======
-const {register,login, authenticationToken} = require('../../controllers/authController');
->>>>>>> b012c2a30d1f81c846e4bff9564c7756c8998261
 const user = require('../../models/user');
 
 //Swagger Schema components
@@ -83,14 +79,9 @@ router.post('/register', register,() => {})
 router.post('/login', login,  ()=>{})
 
 //Login endpoint
-<<<<<<< HEAD
 
 router.get('/test-token',authenticationToken,(req, res)=>{
     res.send({user: req.user})
-=======
-router.get('/refresh-token',authenticationToken,(req, res)=>{
-    res.json({user:user})
->>>>>>> b012c2a30d1f81c846e4bff9564c7756c8998261
 })
 
 

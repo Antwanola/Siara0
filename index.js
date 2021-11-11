@@ -14,31 +14,20 @@ const errorHandler=  require('./helpers/errorHandler')
 const user = require('./models/user')
 const http = require('http')
 const formatMessage = require('./utils/message')
-<<<<<<< HEAD
 // const chatUser = require('./utils/chatUser')
 require('dotenv').config();
-=======
-const chatUser = require('./utils/chatUser')
->>>>>>> b012c2a30d1f81c846e4bff9564c7756c8998261
 const swaggerUi = require('swagger-ui-express')
 const swaggerJsdoc = require('swagger-jsdoc')
 const server = http.createServer(App)
 const io = socketio(server)
-<<<<<<< HEAD
 const initFireBase = require("./Notifications/firebase")
 
 
-=======
-io.use((socket, next)=>{
-    sessionMiddle(socket.request, {}, next)
-})
->>>>>>> b012c2a30d1f81c846e4bff9564c7756c8998261
 
 
 
 
 
-<<<<<<< HEAD
 
 io.use((socket, next)=>{
     sessionMiddle(socket.request, {}, next)
@@ -48,9 +37,6 @@ io.use((socket, next)=>{
 
 // dev_URI
 mongoose.connect(process.env.prod_URI, {
-=======
-mongoose.connect("mongodb+srv://antwan:comodor29@cluster0.ncriv.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", {
->>>>>>> b012c2a30d1f81c846e4bff9564c7756c8998261
         useNewUrlParser: true
     }).then(db => {
         console.log("db secured")
