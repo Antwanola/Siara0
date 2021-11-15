@@ -56,6 +56,10 @@ ref: 'notification',
 attended:{
     type:String
 },
+createdTime:{
+    type:Date,
+    default: new Date()
+}
 })
 
 
