@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const notification = new Schema({
+const history = new Schema({
     user: {
         type:Schema.Types.ObjectId
     },
@@ -22,4 +22,4 @@ const notification = new Schema({
   
 
 
-module.exports = mongoose.model('notification',notification)
+module.exports = mongoose.model('history',history)

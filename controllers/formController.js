@@ -7,6 +7,7 @@ const emergencyReport = require('../models/emergencyReport')
 const productComplaint = require('../models/productComplaint')
 const serviceComplaint = require('../models/serviceComplaint');
 const notification = require('../models/notification')
+const history = require('../models/history')
 const users = require('../models/user')
 
 const moment = require('moment')
@@ -32,15 +33,15 @@ module.exports={
 
 
        
-        notification.findOne({user:req.user.User._id})
-        .populate({path: 'incident', options: { sort: { 'postedTime': -1 } } } )
-        .populate({path: 'accident', options: { sort: { 'postedTime': -1 } } })
-        .populate({path: 'emergencyReport', options: { sort: { 'postedTime': -1 } } })
-        .populate({path: 'environmentalReport', options: { sort: { 'postedTime': -1 } } }).limit(2)
-        .populate({path: 'healthReport', options: { sort: { 'postedTime': -1 } } })
-        .populate({path: 'productComplaint', options: { sort: { 'postedTime': -1 } } })
-        .populate({path: 'securityReport', options: { sort: { 'postedTime': -1 } } })
-        .populate({path: 'serviceComplaint', options: { sort: { 'postedTime': -1 } } })
+        notification.find({user:req.user.User._id}).sort({"createdTime": -1})
+        // .populate({path: 'incident', options: { sort: { 'postedTime': -1 } } } )
+        // .populate({path: 'accident', options: { sort: { 'postedTime': -1 } } })
+        // .populate({path: 'emergencyReport', options: { sort: { 'postedTime': -1 } } })
+        // .populate({path: 'environmentalReport', options: { sort: { 'postedTime': -1 } } }).limit(2)
+        // .populate({path: 'healthReport', options: { sort: { 'postedTime': -1 } } })
+        // .populate({path: 'productComplaint', options: { sort: { 'postedTime': -1 } } })
+        // .populate({path: 'securityReport', options: { sort: { 'postedTime': -1 } } })
+        // .populate({path: 'serviceComplaint', options: { sort: { 'postedTime': -1 } } })
         .then(result =>{
            
                 res.status(200).json(result)
@@ -66,15 +67,15 @@ module.exports={
     
     history:(req, res, next)=>{
       
-        users.findById({_id:req.user.User._id})
-        .populate('incident')
-        .populate('environmentalReport')
-        .populate('accident')
-        .populate('emergencyReport')
-        .populate('healthReport')
-        .populate('productComplaint')
-        .populate('securityReport')
-        .populate('serviceComplaint')
+        history.find({user:req.user.User._id})
+        // .populate('incident')
+        // .populate('environmentalReport')
+        // .populate('accident')
+        // .populate('emergencyReport')
+        // .populate('healthReport')
+        // .populate('productComplaint')
+        // .populate('securityReport')
+        // .populate('serviceComplaint')
         .then(result =>{
             res.status(200).json(result)
            
@@ -104,28 +105,19 @@ module.exports={
         }
         
         incident.create(payload, (err, data)=>{
-            if(err) return err
+            res.status(200).json({status:'OK', message:'Report Posted'})
             users.findOneAndUpdate({_id:req.user.User._id}, {$push:{incident:data._id}}, {new:true}).then(user=>{
-                res.status(200)
+              
 
             })
-            notification.find({user:req.user.User._id}).then(user=>{
-                if( user == null || user.length<=0 ){
-                const noteData = {
+            const noteData = {
                     user:req.user.User._id,
-                    incident:data._id,
+                    report:payload.report,
+                    type:'incident'
                     }
-                notification.create(noteData).then(note=>{
-                    res.status(200).json({note, message:'Notification Created'})
-                })
-               }
-               else{
-                    notification.findOneAndUpdate({user: req.user.User._id}, {$push:{incident:data._id}}, {new:true}).then(user=>{
-                        res.status(200).json({status:'OK',message:'Report posted and all fields have been updated.'})
-                    })
-        
-                }
-            })
+            notification.create(noteData)
+            history.create(noteData)
+           
             // const noteData = {
             //     user:req.user.User._id,
             //     incident:data._id,
@@ -146,23 +138,6 @@ module.exports={
        
         
 
-
-
-        // payload.save().then(saved=>{
-            
-        // users.findByIdAndUpdate({_id:saved.user}, {$set:{incident:saved._id}}).then((result)=>{
-        //     console.log(result)
-        // })
-                // const userPayload = new users({incident:saved._id})
-                // userPayload.save().then(userSaved=>{console.log(userSaved)})
-            
-
-            // newDataSort(incident)
-            // notifications(saved)
-            // if(saved) res.status(200).json({saved})
-            // newDataSort(incident)
-      
-
     accident:(req, res, next)=>{
         const payload = {
             user:req.user.User._id,
@@ -179,29 +154,37 @@ module.exports={
             phone: req.body.phone
             }
             accident.create(payload, (err, data)=>{
-                if(err) return err
+                 res.status(200).json({status:'OK', message:'Report Posted'})
                 users.findOneAndUpdate({_id:req.user.User._id}, {$push:{accident:data._id}}, {new:true}).then(user=>{
                     res.status(200)
     
                 })
-                notification.findOne({user:req.user.User._id}).then(user=>{
-                    if( user == null || user.length<=0 ){
-                        const noteData = {
-                            user:req.user.User._id,
-                            accident:data._id,
-                            }
-                            
-                        notification.create(noteData).then(note=>{
-                            res.status(200).json({note, message:'Notification Created'})
-                        })
-                       }
-                    else{
-                        notification.findOneAndUpdate({user: req.user.User._id}, {$push:{accident:data._id}}, {new:true}).then(user=>{
-                            res.status(200).json({status:'OK',message:'Report posted and all fields have been updated.'})
-                        })
-            
+
+                const noteData = {
+                    user:req.user.User._id,
+                    report:payload.report,
+                    type:'accident'
                     }
-                })
+            notification.create(noteData)
+            history.create(noteData)
+                // notification.findOne({user:req.user.User._id}).then(user=>{
+                //     if( user == null || user.length<=0 ){
+                //         const noteData = {
+                //             user:req.user.User._id,
+                //             accident:data._id,
+                //             }
+                            
+                //         notification.create(noteData).then(note=>{
+                //             res.status(200).json({note, message:'Notification Created'})
+                //         })
+                //        }
+                //     else{
+                //         notification.findOneAndUpdate({user: req.user.User._id}, {$push:{accident:data._id}}, {new:true}).then(user=>{
+                //             res.status(200).json({status:'OK',message:'Report posted and all fields have been updated.'})
+                //         })
+            
+                //     }
+                // })
                 // const noteData = {
                 //     user:req.user.User._id,
                 //     incident:data._id,
@@ -238,28 +221,18 @@ module.exports={
             }
 
             healthReport.create(payload, (err, data)=>{
-                if(err) return err
+               res.status(200).json({status:'OK', message:'Report Posted'})
                 users.findOneAndUpdate({_id:req.user.User._id}, {$push:{healthReport:data._id}}, {new:true}).then(user=>{
                     res.status(200)
     
                 })
-                notification.find({user:req.user.User._id}).then(user=>{
-                    if( user == null || user.length<=0 ){
-                        const noteData = {
-                            user:req.user.User._id,
-                            healthReport:data._id,
-                            }
-                        notification.create(noteData).then(note=>{
-                            res.status(200).json({note, message:'Notification Created'})
-                        })
-                       }
-                    else{
-                        notification.findOneAndUpdate({user: req.user.User._id}, {$push:{healthReport:data._id}}, {new:true}).then(user=>{
-                            res.status(200).json({status:'OK',message:'Report posted and all fields have been updated.'})
-                        })
-            
+               const noteData = {
+                    user:req.user.User._id,
+                    report:payload.report,
+                    type:'healthReport'
                     }
-                })
+            notification.create(noteData)
+            history.create(noteData)
                 // const noteData = {
                 //     user:req.user.User._id,
                 //     incident:data._id,
@@ -294,28 +267,18 @@ module.exports={
             phone: req.body.phone
             }
             securityReport.create(payload, (err, data)=>{
-                if(err) return err
+                res.status(200).json({status:'OK', message: 'Report Posted'})
                 users.findOneAndUpdate({_id:req.user.User._id}, {$push:{securityReport:data._id}}, {new:true}).then(user=>{
                     res.status(200)
     
                 })
-                notification.find({user:req.user.User._id}).then(user=>{
-                    if( user == null || user.length<=0 ){
-                        const noteData = {
-                            user:req.user.User._id,
-                            securityReport:data._id,
-                            }
-                        notification.create(noteData).then(note=>{
-                            res.status(200).json({note, message:'Notification Created'})
-                        })
-                       }
-                    else{
-                        notification.findOneAndUpdate({user: req.user.User._id}, {$push:{securityReport:data._id}}, {new:true}).then(user=>{
-                            res.status(200).json({status:'OK',message:'Report posted and all fields have been updated.'})
-                        })
-            
+                const noteData = {
+                    user:req.user.User._id,
+                    report:payload.report,
+                    type:'securityReport'
                     }
-                })
+            notification.create(noteData)
+            history.create(noteData)
                 // const noteData = {
                 //     user:req.user.User._id,
                 //     incident:data._id,
@@ -351,28 +314,19 @@ module.exports={
             phone: req.body.phone
         }
         environmentalReport.create(payload, (err, data)=>{
-            if(err) return err
+            if(err) next(err)
+              res.status(200).json({status:'OK', message: 'Report Posted'})
             users.findOneAndUpdate({_id:req.user.User._id}, {$push:{environmentalReport:data._id}}, {new:true}).then(user=>{
                 res.status(200)
 
             })
-            notification.find({user:req.user.User._id}).then(user=>{
-                if( user == null || user.length<=0 ){
-                    const noteData = {
-                        user:req.user.User._id,
-                        environmentalReport:data._id,
-                        }
-                    notification.create(noteData).then(note=>{
-                        res.status(200).json({note, message:'Notification Created'})
-                    })
-                   }
-                else{
-                    notification.findOneAndUpdate({user: req.user.User._id}, {$push:{environmentalReport:data._id}}, {new:true}).then(user=>{
-                        res.status(200).json({status:'OK',message:'Report posted and all fields have been updated.'})
-                    })
-        
-                }
-            })
+           const noteData = {
+                    user:req.user.User._id,
+                    report:payload.report,
+                    type:'environmentalReport'
+                    }
+            notification.create(noteData)
+            history.create(noteData)
             // const noteData = {
             //     user:req.user.User._id,
             //     incident:data._id,
@@ -406,28 +360,39 @@ module.exports={
             phone: req.body.phone
         }
         emergencyReport.create(payload, (err, data)=>{
-            if(err) return err
+             if(err) next(err)
+              res.status(200).json({status:'OK', message: 'Report Posted'})
             users.findOneAndUpdate({_id:req.user.User._id}, {$push:{emergencyReport:data._id}}, {new:true}).then(user=>{
                 res.status(200)
 
             })
-            notification.find({user:req.user.User._id}).then(user=>{
-                if( user == null || user.length<=0 ){
-                    const noteData = {
-                        user:req.user.User._id,
-                        emergencyReport:data._id,
-                        }
-                    notification.create(noteData).then(note=>{
-                        res.status(200).json({note, message:'Notification Created'})
-                    })
-                   }
-                else{
-                    notification.findOneAndUpdate({user: req.user.User._id}, {$push:{emergencyReport:data._id}}, {new:true}).then(user=>{
-                        res.status(200).json({status:'OK',message:'Report posted and all fields have been updated.'})
-                    })
+             const noteData = {
+                    user:req.user.User._id,
+                    report:payload.report,
+                    type:'emergencyReport'
+                    }
+            notification.create(noteData)
+            history.create(noteData)
+
+
+
+            // notification.find({user:req.user.User._id}).then(user=>{
+            //     if( user == null || user.length<=0 ){
+            //         const noteData = {
+            //             user:req.user.User._id,
+            //             emergencyReport:data._id,
+            //             }
+            //         notification.create(noteData).then(note=>{
+            //             res.status(200).json({note, message:'Notification Created'})
+            //         })
+            //        }
+            //     else{
+            //         notification.findOneAndUpdate({user: req.user.User._id}, {$push:{emergencyReport:data._id}}, {new:true}).then(user=>{
+            //             res.status(200).json({status:'OK',message:'Report posted and all fields have been updated.'})
+            //         })
         
-                }
-            })
+            //     }
+            // })
             // const noteData = {
             //     user:req.user.User._id,
             //     incident:data._id,
@@ -463,35 +428,19 @@ module.exports={
             phone: req.body.phone
         }
         productComplaint.create(payload, (err, data)=>{
-            if(err) return err
+             if(err) next(err)
+              res.status(200).json({status:'OK', message: 'Report Posted'})
             users.findOneAndUpdate({_id:req.user.User._id}, {$push:{productComplaint:data._id}}, {new:true}).then(user=>{
                 res.status(200)
 
             })
-            notification.find({user:req.user.User._id}).then(user=>{
-                if( user == null || user.length<=0 ){
-                    const noteData = {
-                        user:req.user.User._id,
-                        productComplaint:data._id,
-                        }
-                    notification.create(noteData).then(note=>{
-                        res.status(200).json({note, message:'Notification Created'})
-                    })
-                   }
-                else{
-                    notification.findOneAndUpdate({user: req.user.User._id}, {$push:{productComplaint:data._id}}, {new:true}).then(user=>{
-                        res.status(200).json({status:'OK',message:'Report posted and all fields have been updated.'})
-                    })
-        
-                }
-            })
-            // const noteData = {
-            //     user:req.user.User._id,
-            //     incident:data._id,
-            // }
-            // notification.create(noteData).then(note=>{
-            //     res.status(200).json(note)
-            // })
+             const noteData = {
+                    user:req.user.User._id,
+                    report:payload.product_narration,
+                    type:'productComplain'
+                    }
+            notification.create(noteData)
+            history.create(noteData)
             .catch(err=>{
                 if(err)
                 res.status(400).json({err:err.message})
@@ -521,29 +470,37 @@ module.exports={
             phone: req.body.phone
         }
         serviceComplaint.create(payload, (err, data)=>{
-            if(err) return err
+             if(err) next(err)
+              res.status(200).json({status:'OK', message: 'Report Posted'})
           
             users.findOneAndUpdate({_id:req.user.User._id}, {$push:{serviceComplaint:data._id}}, {new:true}).then(user=>{
                 res.status(200)
 
             })
-            notification.find({user:req.user.User._id}).then(user=>{
-                if( user == null || user.length<=0 ){
-                    const noteData = {
-                        user:req.user.User._id,
-                        serviceComplaint:data._id,
-                        }
-                    notification.create(noteData).then(note=>{
-                        res.status(200).json({note, message:'Notification Created'})
-                    })
-                   }
-                else{
-                    notification.findOneAndUpdate({user: req.user.User._id}, {$push:{serviceComplaint:data._id}}, {new:true}).then(user=>{
-                        res.status(200).json({status:'OK',message:'Report posted and all fields have been updated.'})
-                    })
+             const noteData = {
+                    user:req.user.User._id,
+                    report:payload.report,
+                    type:'serviceComplain'
+                    }
+            notification.create(noteData)
+            history.create(noteData)
+            // notification.find({user:req.user.User._id}).then(user=>{
+            //     if( user == null || user.length<=0 ){
+            //         const noteData = {
+            //             user:req.user.User._id,
+            //             serviceComplaint:data._id,
+            //             }
+            //         notification.create(noteData).then(note=>{
+            //             res.status(200).json({note, message:'Notification Created'})
+            //         })
+            //        }
+            //     else{
+            //         notification.findOneAndUpdate({user: req.user.User._id}, {$push:{serviceComplaint:data._id}}, {new:true}).then(user=>{
+            //             res.status(200).json({status:'OK',message:'Report posted and all fields have been updated.'})
+            //         })
         
-                }
-            })
+            //     }
+            // })
             // const noteData = {
             //     user:req.user.User._id,
             //     incident:data._id,

@@ -79,9 +79,8 @@ register:(req, res, next)=>{
 
 
 getProfile:(req, res, next)=>{
-  const userId = req.user.User._id
    try {
-    user.findById({_id:userId}).then(User=>{
+    user.findById({_id:req.user.User._id}).then(User=>{
      return res.status(200).send({User})
     })
     
