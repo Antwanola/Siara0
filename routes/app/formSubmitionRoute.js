@@ -648,7 +648,7 @@ router.get('/notification', authenticationToken, newDataSort, () => {})
  * 
  * 
  */
-router.get('/profile/user/:id', ()=>{})
+router.get('/profile', ()=>{})
 
 
 /**
