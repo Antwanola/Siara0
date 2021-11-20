@@ -81,8 +81,14 @@ register:(req, res, next)=>{
 getProfile:(req, res, next)=>{
    try {
     user.findById({_id:req.user.User._id}).then(User=>{
-      if(err) next(err)
-     return res.status(200).send({User})
+      const user = {
+        name:User.name,
+        email:User.email,
+        phone:User.phone,
+        createdTime:User.createdTime
+      }
+     
+     return res.status(200).send({user})
     })
     
   } catch (error) {
@@ -96,7 +102,7 @@ updateProfile:(req, res, next)=>{
   const userId = req.user.User._id
   const {email, phone, name} = req.body
   try {
-  user.findOne({_id:userId}).then(User=>{
+  user.find({_id:userId}).then(User=>{
     User.name = name;
     User.email = email;
     User.phone = phone
