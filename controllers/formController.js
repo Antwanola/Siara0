@@ -479,7 +479,7 @@ module.exports={
             })
              const noteData = {
                     user:req.user.User._id,
-                    report:payload.report,
+                    report:payload.complaint_narration,
                     type:'serviceComplain'
                     }
             notification.create(noteData)
