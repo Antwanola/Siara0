@@ -623,56 +623,6 @@ router.get('/history', authenticationToken, history, () => {})
 
 router.get('/notification', authenticationToken, newDataSort, () => {})
 
-//Profile
 
-//Get profile
-
-/**
- * //User profile
-/**
- * @swagger
- /profile/user/:id:
- *     get:
- *       summary: gets user by id
- *       description: Gets user by id. make sure the token is plcaed in the authorization header callded bearer
- *       requestBody:
- *          content:
- *            application/json:
- *             schema:
- *               $ref: '#/components/schemas/user'
- *       responses:
- *         200:
- *           description: OK
- *         404:
- *            description: bad request
- * 
- * 
- */
-router.get('/profile', ()=>{})
-
-
-/**
- * //User profile
-/**
- * @swagger
- /profile/user/:id:
- *     post:
- *       summary: post user by id
- *       description: post user by id. make sure the token is plcaed in the authorization header callded bearer
- *       requestBody:
- *          content:
- *            application/json:
- *             schema:
- *               $ref: '#/components/schemas/user'
- *       responses:
- *         200:
- *           description: OK
- *         404:
- *            description: bad request
- * 
- * 
- */
-
-router.post('/profile',(req, res)=>{})
 
 module.exports = router;

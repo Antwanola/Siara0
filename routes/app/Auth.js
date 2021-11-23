@@ -110,7 +110,7 @@ router.get('/profile',  authenticationToken, getProfile, ()=>{})
  *       summary: update profile.
  *       description: uses the bearer method in the header to get and decode to for user auth. Takes the user aid from the decoded token and find the right user
  *       requestBody:
- *          content:
+ *          content: the parameters are phone(for phone number), email(for email address) and name(for user name)
  *            application/json:
  *             schema:
  *              properties:

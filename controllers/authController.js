@@ -102,13 +102,18 @@ updateProfile:(req, res, next)=>{
   const userId = req.user.User._id
   const {email, phone, name} = req.body
   try {
-  user.find({_id:userId}).then(User=>{
+  user.findOne({_id:userId}).then(User=>{
     User.name = name;
     User.email = email;
     User.phone = phone
     User.save().then(saved=>{
       if(!saved) throw error
-      res.status(200).send({message: 'User credential saved for ' + saved.name})
+      const newUserCred = {
+        name: saved.name,
+        phone:saved.phone,
+        email:saved.email
+      }
+      res.status(200).send({message: 'User credential saved for ' + saved.name, newUserCred})
     })
   })
  
