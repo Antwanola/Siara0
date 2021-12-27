@@ -37,7 +37,7 @@ io.use((socket, next)=>{
 
 
 // dev_URI
-mongoose.connect(process.env.dev_URI, {
+mongoose.connect(process.env.prod_URI, {
         useNewUrlParser: true
     }).then(db => {
         console.log("db secured")
