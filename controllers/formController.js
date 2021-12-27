@@ -9,6 +9,8 @@ const serviceComplaint = require('../models/serviceComplaint');
 const notification = require('../models/notification')
 const history = require('../models/history')
 const users = require('../models/user')
+const {isEmpty} = require('../helpers/formHelpers')
+const path = require('path')
 
 const moment = require('moment')
 
@@ -43,6 +45,7 @@ module.exports={
         // .populate({path: 'securityReport', options: { sort: { 'postedTime': -1 } } })
         // .populate({path: 'serviceComplaint', options: { sort: { 'postedTime': -1 } } })
         .then(result =>{
+            console.log("hello")
            
                 res.status(200).json(result)
             
@@ -88,6 +91,32 @@ module.exports={
        
 },
     Incident: (req, res, next)=>{
+        let fileName;
+        if(req.files === null){
+            fileName = ''
+             }
+ 
+         else{
+            if(!isEmpty(req.files)){
+             console.log(req.files)
+             filetypes = /jpg|gif|jpeg|png|PNG|JPG|GIF|JPEG|MP3|MP4|mp3|mp4/
+             console.log( filetypes.test(path.extname(req.files.media.name)))
+             if(filetypes.test(path.extname(req.files.media.name))){
+                 let media =  req.files.media
+               fileName = Date.now() + '-' +  media.name
+            
+               media.mv('./uploads/incident/'+fileName, (err)=>{
+                 if(err) res.send(err.message)           
+               })
+            }
+            else{
+                return res.send({message:'Please use supported file format. You can add a picture, audio or video if available.'})
+            }
+             }
+               
+            
+         }
+       
         const payload ={
             user:req.user.User._id,
             street: req.body.street,
@@ -99,16 +128,18 @@ module.exports={
             eResponse:req.body.eResponse,
             eResponse_needed:req.body.eResponse_needed,
             anonymous:req.body.anonimous,
-            username:req.body.name,
+            name:req.body.name,
             phone: req.body.phone,
+            media: fileName
             
         }
         
-        incident.create(payload, (err, data)=>{
+        incident.create(payload, (err, data)=>{ 
+            console.log(data)  
             res.status(200).json({status:'OK', message:'Report Posted'})
-            users.findOneAndUpdate({_id:req.user.User._id}, {$push:{incident:data._id}}, {new:true}).then(user=>{
-              
-
+            users.findOneAndUpdate({_id:req.user.User._id}, {$push:{incident:data._id}}, {new:true}).then(User=>{
+            }).catch(e=>{
+                if(e) res.send(e.message)
             })
             const noteData = {
                     user:req.user.User._id,
@@ -118,13 +149,6 @@ module.exports={
             notification.create(noteData)
             history.create(noteData)
            
-            // const noteData = {
-            //     user:req.user.User._id,
-            //     incident:data._id,
-            // }
-            // notification.create(noteData).then(note=>{
-            //     res.status(200).json(note)
-            // })
             .catch(err=>{
                 if(err)
                 res.status(400).json({err:err.message})
@@ -139,6 +163,30 @@ module.exports={
         
 
     accident:(req, res, next)=>{
+        let fileName;
+        if(req.files === null){
+            fileName = ''
+             }
+ 
+         else{
+            if(!isEmpty(req.files)){
+             console.log(req.files)
+             filetypes = /jpg|gif|jpeg|png|PNG|JPG|GIF|JPEG|MP3|MP4|mp3|mp4/
+             if(filetypes.test(path.extname(req.files.media.name))){
+                 let media =  req.files.media
+               fileName = Date.now() + '-' +  media.name
+            
+               media.mv('./uploads/accident/'+fileName, (err)=>{
+                 if(err) res.send(err.message)           
+               })
+            }
+            else{
+                return res.send({message:'Please use supported file format. You can add a picture, audio or video if available.'})
+            }
+             }
+               
+            
+         }
         const payload = {
             user:req.user.User._id,
             street: req.body.street,
@@ -150,10 +198,12 @@ module.exports={
             eResponse:req.body.eResponse,
             eResponse_needed:req.body.eResponse_needed,
             anonymous:req.body.anonimous,
-            username:req.body.name,
-            phone: req.body.phone
+            name:req.body.name,
+            phone: req.body.phone,
+            media: fileName
             }
             accident.create(payload, (err, data)=>{
+                
                  res.status(200).json({status:'OK', message:'Report Posted'})
                 users.findOneAndUpdate({_id:req.user.User._id}, {$push:{accident:data._id}}, {new:true}).then(user=>{
                     res.status(200)
@@ -201,6 +251,31 @@ module.exports={
             next()
     },
     healthReport:(req, res, next)=>{
+        let fileName;
+        if(req.files === null){
+            fileName = ''
+             }
+ 
+         else{
+            if(!isEmpty(req.files)){
+             console.log(req.files)
+             filetypes = /jpg|gif|jpeg|png|PNG|JPG|GIF|JPEG|MP3|MP4|mp3|mp4/
+             console.log( filetypes.test(path.extname(req.files.media.name)))
+             if(filetypes.test(path.extname(req.files.media.name))){
+                 let media =  req.files.media
+               fileName = Date.now() + '-' +  media.name
+            
+               media.mv('./uploads/health/'+fileName, (err)=>{
+                 if(err) res.send(err.message)           
+               })
+            }
+            else{
+                return res.send({message:'Please use supported file format. You can add a picture, audio or video if available.'})
+            }
+             }
+               
+            
+         }
         const payload = {
             user:req.user.User._id,
             street: req.body.street,
@@ -216,11 +291,13 @@ module.exports={
             eResponse:req.body.eResponse,
             eResponse_needed:req.body.eResponse_needed,
             anonymous:req.body.anonymous,
-            username:req.body.name,
-            phone: req.body.phone
+            name:req.body.name,
+            phone: req.body.phone,
+            media:fileName
             }
 
             healthReport.create(payload, (err, data)=>{
+               
                res.status(200).json({status:'OK', message:'Report Posted'})
                 users.findOneAndUpdate({_id:req.user.User._id}, {$push:{healthReport:data._id}}, {new:true}).then(user=>{
                     res.status(200)
@@ -250,6 +327,31 @@ module.exports={
 },
 
     security:(req, res, next)=>{
+        let fileName;
+        if(req.files === null){
+            fileName = ''
+             }
+ 
+         else{
+            if(!isEmpty(req.files)){
+             console.log(req.files)
+             filetypes = /jpg|gif|jpeg|png|PNG|JPG|GIF|JPEG|MP3|MP4|mp3|mp4/
+             console.log( filetypes.test(path.extname(req.files.media.name)))
+             if(filetypes.test(path.extname(req.files.media.name))){
+                 let media =  req.files.media
+               fileName = Date.now() + '-' +  media.name
+            
+               media.mv('./uploads/security/'+fileName, (err)=>{
+                 if(err) res.send(err.message)           
+               })
+            }
+            else{
+                return res.send({message:'Please use supported file format. You can add a picture, audio or video if available.'})
+            }
+             }
+               
+            
+         }
         const payload ={
             user:req.user.User._id,
             street: req.body.street,
@@ -263,8 +365,9 @@ module.exports={
             eResponse:req.body.eResponse,
             eResponse_needed:req.body.eResponse_needed,
             anonymous:req.body.anonymous,
-            username:req.body.name,
-            phone: req.body.phone
+            name:req.body.name,
+            phone: req.body.phone,
+            media:fileName
             }
             securityReport.create(payload, (err, data)=>{
                 res.status(200).json({status:'OK', message: 'Report Posted'})
@@ -296,7 +399,31 @@ module.exports={
     },
 
     envReport:(req, res, next)=>{
-
+        let fileName;
+        if(req.files === null){
+            fileName = ''
+             }
+ 
+         else{
+            if(!isEmpty(req.files)){
+             console.log(req.files)
+             filetypes = /jpg|gif|jpeg|png|PNG|JPG|GIF|JPEG|MP3|MP4|mp3|mp4/
+             console.log( filetypes.test(path.extname(req.files.media.name)))
+             if(filetypes.test(path.extname(req.files.media.name))){
+                 let media =  req.files.media
+               fileName = Date.now() + '-' +  media.name
+            
+               media.mv('./uploads/environment/'+fileName, (err)=>{
+                 if(err) res.send(err.message)           
+               })
+            }
+            else{
+                return res.send({message:'Please use supported file format. You can add a picture, audio or video if available.'})
+            }
+             }
+               
+            
+         }
         const payload = {
             user:req.user.User._id,
             street: req.body.street,
@@ -310,8 +437,9 @@ module.exports={
             eResponse: req.body.eResponse,
             eResponse_needed: req.body.eResponse_needed,
             anonymous: req.body.anonymous,
-            username: req.body.name,
-            phone: req.body.phone
+            name: req.body.name,
+            phone: req.body.phone,
+            media:fileName
         }
         environmentalReport.create(payload, (err, data)=>{
             if(err) next(err)
@@ -343,6 +471,31 @@ module.exports={
         next()
     },
     emergReport:(req, res, next)=>{
+        let fileName;
+        if(req.files === null){
+            fileName = ''
+             }
+ 
+         else{
+            if(!isEmpty(req.files)){
+             console.log(req.files)
+             filetypes = /jpg|gif|jpeg|png|PNG|JPG|GIF|JPEG|MP3|MP4|mp3|mp4/
+             console.log( filetypes.test(path.extname(req.files.media.name)))
+             if(filetypes.test(path.extname(req.files.media.name))){
+                 let media =  req.files.media
+               fileName = Date.now() + '-' +  media.name
+            
+               media.mv('./uploads/emergency/'+fileName, (err)=>{
+                 if(err) res.send(err.message)           
+               })
+            }
+            else{
+                return res.send({message:'Please use supported file format. You can add a picture, audio or video if available.'})
+            }
+             }
+               
+            
+         }
         const payload = {
             user:req.user.User._id,
             street: req.body.street,
@@ -356,8 +509,9 @@ module.exports={
             eResponse: req.body.eResponse,
             eResponse_needed: req.body.eResponse_needed,
             anonymous: req.body.anonymous,
-            username: req.body.name,
-            phone: req.body.phone
+            name: req.body.name,
+            phone: req.body.phone,
+            media:fileName
         }
         emergencyReport.create(payload, (err, data)=>{
              if(err) next(err)
@@ -410,6 +564,31 @@ module.exports={
     },
 
     prodComplaint:(req, res, next)=>{
+        let fileName;
+        if(req.files === null){
+            fileName = ''
+             }
+ 
+         else{
+            if(!isEmpty(req.files)){
+             console.log(req.files)
+             filetypes = /jpg|gif|jpeg|png|PNG|JPG|GIF|JPEG|MP3|MP4|mp3|mp4/
+             console.log( filetypes.test(path.extname(req.files.media.name)))
+             if(filetypes.test(path.extname(req.files.media.name))){
+                 let media =  req.files.media
+               fileName = Date.now() + '-' +  media.name
+            
+               media.mv('./uploads/product/'+fileName, (err)=>{
+                 if(err) res.send(err.message)           
+               })
+            }
+            else{
+                return res.send({message:'Please use supported file format. You can add a picture, audio or video if available.'})
+            }
+             }
+               
+            
+         }
         const payload = {
             user:req.user.User._id,
             street: req.body.street,
@@ -424,8 +603,9 @@ module.exports={
             supplier: req.body.supplier,
             expiry_date: req.body.expiry_date,
             anonymous: req.body.anonymous,
-            username: req.body.name,
-            phone: req.body.phone
+            name: req.body.name,
+            phone: req.body.phone,
+            media:fileName
         }
         productComplaint.create(payload, (err, data)=>{
              if(err) next(err)
@@ -451,6 +631,31 @@ module.exports={
 
     },
     servComplaint:(req, res, next)=>{
+        let fileName;
+        if(req.files === null){
+            fileName = ''
+             }
+ 
+         else{
+            if(!isEmpty(req.files)){
+             console.log(req.files)
+             filetypes = /jpg|gif|jpeg|png|PNG|JPG|GIF|JPEG|MP3|MP4|mp3|mp4/
+             console.log( filetypes.test(path.extname(req.files.media.name)))
+             if(filetypes.test(path.extname(req.files.media.name))){
+                 let media =  req.files.media
+               fileName = Date.now() + '-' +  media.name
+            
+               media.mv('./uploads/service/'+fileName, (err)=>{
+                 if(err) res.send(err.message)           
+               })
+            }
+            else{
+                return res.send({message:'Please use supported file format. You can add a picture, audio or video if available.'})
+            }
+             }
+               
+            
+         }
         const payload = {
             
             user:req.user.User._id,
@@ -466,8 +671,9 @@ module.exports={
             complaint_evidence: req.body.complaint_evidence,
             service_feedback: req.body.service_feedback,
             anonymous: req.body.anonymous,
-            username: req.body.name,
-            phone: req.body.phone
+            name: req.body.name,
+            phone: req.body.phone,
+            media: fileName
         }
         serviceComplaint.create(payload, (err, data)=>{
              if(err) next(err)
@@ -515,6 +721,10 @@ module.exports={
         })
        
         next()
+
+    },
+
+    getTest:(req, res, next)=>{
 
     }
     

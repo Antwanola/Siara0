@@ -965,5 +965,15 @@ deleteServiceComplaint: async (req, res, next) => {
     chat: (req, res, next) => {
         res.render('admin/chat')
 
+    }, 
+    getTest:(req, res, next)=>{
+        res.render('admin/test')
+    },
+    postTest:(req, res, next)=>{
+        const {name, email, picture}=req.body
+        console.log(req.files.picture)
+        console.log(email)
+        next()
     }
+   
 }

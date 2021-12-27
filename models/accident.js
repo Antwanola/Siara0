@@ -54,6 +54,9 @@ const accident = new Schema({
     attended:{
         type:String
     },
+    media:{
+        type:String
+    },
     postedTime:{
         type:Date,
         default:new Date()

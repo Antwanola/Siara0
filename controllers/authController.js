@@ -4,6 +4,7 @@ const user = require('../models/user')
 require('dotenv').config();
 const tokenStore = require('../models/tokenStore')
 const fs = require('fs')
+const {isEmpty} = require('../helpers/formHelpers')
 const {sendNotification}  = require('../Notifications/firebase')
 
 function generateToken(User){
@@ -28,13 +29,11 @@ register:(req, res, next)=>{
   })
   try {
     user.findOne({phone:User.phone}).then(payload=>{
-     
       
-    if(payload == null){
+    if(payload == null || !payload){
     User.save().then(saved=>{        
-        const accessToken =  generateToken(saved.id)
-        const refreshToken = Jwt.sign({id:saved.id}, process.env.REFRESH_TOKEN, {expiresIn :60* 60*24*7})        
-        res.status(200).json({ accessToken, saved })
+        const accessToken =  generateToken(saved)
+        res.status(200).json({ accessToken, saved, status:'OK'})
     })    
     
     }
@@ -58,15 +57,14 @@ register:(req, res, next)=>{
     const request = req.body.phone
     user.findOne({phone:request}).then(payload=>{        
       if(payload == null || !payload){
-               return res.status(403).json({
+               res.status(403).json({
                 message: `User with the number ${request} doesn't exist. Please sign Up`,
               });
+              return
           }
       else{
-          const token = generateToken(payload)
-          const refreshToken =  Jwt.sign({id:payload.id}, process.env.REFRESH_TOKEN, )         
-         
-          return res.status(200).json({payload, token, refreshToken});
+          const token = generateToken(payload)         
+          return res.status(200).json({payload, token});
           
            }  
     })
@@ -79,47 +77,58 @@ register:(req, res, next)=>{
 
 
 getProfile:(req, res, next)=>{
-   try {
-    user.findById({_id:req.user.User._id}).then(User=>{
+  
+    user.findOne({_id:req.user.User._id}).then(User=>{
       const user = {
         name:User.name,
         email:User.email,
         phone:User.phone,
+        picture:User.picture,
         createdTime:User.createdTime
       }
-     
+     console.log(user)
      return res.status(200).send({user})
     })
+    .catch(e=>{
+      return res.send(e.message)
+    })
     
-  } catch (error) {
-    return res.send(error.message)
-  }
   next()
-  
 },
 
 updateProfile:(req, res, next)=>{
-  const userId = req.user.User._id
-  const {email, phone, name} = req.body
-  try {
+  const userId = req.user.User._id  
   user.findOne({_id:userId}).then(User=>{
-    User.name = name;
-    User.email = email;
-    User.phone = phone
+    // console.log({name:req.body.name})
+    User.email = req.body.email,
+    User.phone = req.body.phone,
+    User.name = req.body.name
+      if(!isEmpty(req.files)){
+      let picture =  req.files.picture
+      let fileName = Date.now() + '-' +  picture.name
+      picture.mv('./uploads/profile/'+fileName, (err)=>{
+        if(err) throw err
+        
+      })
+    User.picture = fileName
     User.save().then(saved=>{
-      if(!saved) throw error
-      const newUserCred = {
-        name: saved.name,
-        phone:saved.phone,
-        email:saved.email
-      }
-      res.status(200).send({message: 'User credential saved for ' + saved.name, newUserCred})
+      console.log(saved)
     })
+    }
+   
+    // const payload = {
+    //   name:User.name,
+    //   email:User.email,
+    //   phone:User.phone,
+    //   picture:User.picture,
+    //   createdTime:User.createdTime
+    // }
+    res.status(200).json({status:'OK', message: 'Profile Updated', user:User})
+  
   })
- 
-} catch (error) {
-  res.send(error.message)
-}
+  .catch(err=>{
+    res.send(err.message) 
+  })
 next()
 },
 
@@ -135,15 +144,13 @@ authenticationToken:(req, res, next)=>{
       if(err)return res.status(403).send('Unauthorized request')
       req.user = user
      
-     
   })
     
-  } catch (error) {
-    if(error) return res.send(error.message)
+  } catch (err) {
+    if(err) return res.send(err.message)
   } 
   next()
 },
-
 
 }
   

@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express')
 const router = express.Router()
+
 const {register,login, authenticationToken, logout, getProfile, updateProfile} = require('../../controllers/authController');
 const user = require('../../models/user');
 
@@ -81,6 +82,7 @@ router.post('/login', login,  ()=>{})
 //Login endpoint
 
 router.get('/test-token',authenticationToken,(req, res)=>{
+    console.log({hmm:req.user})
     res.send({user: req.user})
 })
 
@@ -108,9 +110,9 @@ router.get('/profile',  authenticationToken, getProfile, ()=>{})
  * /profile-update:
  *     post:
  *       summary: update profile.
- *       description: uses the bearer method in the header to get and decode to for user auth. Takes the user aid from the decoded token and find the right user
+ *       description: uses the bearer method in the header to get and decode to for user auth. Takes the user id from the decoded token and find the right user
  *       requestBody:
- *          content: the parameters are phone(for phone number), email(for email address) and name(for user name)
+ *         
  *            application/json:
  *             schema:
  *              properties:
@@ -123,7 +125,9 @@ router.get('/profile',  authenticationToken, getProfile, ()=>{})
  *         404:
  *            description: bad request
  */
-router.post('/profile-update', authenticationToken,  updateProfile,()=>{})
+
+// 
+router.post('/profile-update', authenticationToken, updateProfile,()=>{})
 
 //Logout
 // router.get('/logout', logout, ()=>{})

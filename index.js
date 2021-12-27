@@ -1,6 +1,7 @@
 const Express = require('express')
-const handlebars = require('express-handlebars')
 const App = Express()
+const handlebars = require('express-handlebars')
+const fileupload = require('express-fileupload')
 const path = require('path')
 const mongoose = require('mongoose')
 const session = require('express-session')
@@ -36,7 +37,7 @@ io.use((socket, next)=>{
 
 
 // dev_URI
-mongoose.connect(process.env.prod_URI, {
+mongoose.connect(process.env.dev_URI, {
         useNewUrlParser: true
     }).then(db => {
         console.log("db secured")
@@ -56,7 +57,7 @@ mongoose.connect(process.env.prod_URI, {
             },
             servers:[
                 {
-                    url: 'https://siara-health.herokuapp.com/'
+                    url: 'http://localhost:3200/api'
                 }
             ]
             
@@ -77,17 +78,18 @@ initFireBase()
 App.engine('handlebars', handlebars({defaultLayout:'login', helpers:{select, toggleStatus}}));
 App.set('view engine', 'handlebars');
 
-
-//Method
-App.use(methodOverride('_method'));
-
-
 //Use plugins
 App.use(Express.urlencoded({
     extended: true
 }))
 App.use(Express.json())
-App.use(Express.json())
+App.use(fileupload({limits:{fileSize:2*1024*3},}))
+
+//Method
+App.use(methodOverride('_method'));
+
+
+
 
 
 //Session
@@ -116,7 +118,7 @@ App.use((req, res, next)=>{
     res.locals.message = req.flash('message')
     res.locals.home_message = req.flash('home_message')
     res.locals.error= req.flash('error')
-    console.log(req.user)
+    
     
     next()
     })

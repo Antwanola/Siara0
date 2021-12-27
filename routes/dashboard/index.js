@@ -2,6 +2,8 @@ const router = require('express').Router()
 const {userAuth, isAdmin} = require('../../helpers/authHelper');
 // const incident = require('../../models/incident')
 const {
+  getTest,
+  postTest,
   Accident,
   Incident,
   EmergencyRepoert,
@@ -168,9 +170,11 @@ router.get('/product-complaint/edit/:id',editProductComplaint, ()=>{})
 router.put('/product-complaint/update/:id',updateProductComplaint, ()=>{})
 //delete
 router.delete('/product-complaint/delete/:id',deleteProductComplaint, ()=>{})
+router.get('/test', getTest,()=>{})
+router.post('/test', postTest,()=>{})
 
 //get chat
-.get('/chat',chat)
+router.get('/chat',chat)
 
 
 module.exports = router;

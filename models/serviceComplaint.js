@@ -67,6 +67,9 @@ status:{
 attended:{
         type:String
     },
+    media:{
+        type:String
+    },
 postedTime:{
     type:Date,
     default:new Date()
