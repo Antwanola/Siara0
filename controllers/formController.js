@@ -92,7 +92,7 @@ module.exports={
 },
     Incident: (req, res, next)=>{
         let fileName;
-        if(req.files === null){
+        if(isEmpty(req.files) || req.files === null){
             fileName = ''
              }
  
@@ -100,17 +100,17 @@ module.exports={
             if(!isEmpty(req.files)){
              console.log(req.files)
              filetypes = /jpg|gif|jpeg|png|PNG|JPG|GIF|JPEG|MP3|MP4|mp3|mp4/
-             console.log( filetypes.test(path.extname(req.files.media.name)))
+            //  console.log( filetypes.test(path.extname(req.files.media.name)))
              if(filetypes.test(path.extname(req.files.media.name))){
                  let media =  req.files.media
                fileName = Date.now() + '-' +  media.name
             
-               media.mv('./uploads/incident/'+fileName, (err)=>{
+               media.mv('./public/uploads/incident/'+fileName, (err)=>{
                  if(err) res.send(err.message)           
                })
             }
             else{
-                return res.send({message:'Please use supported file format. You can add a picture, audio or video if available.'})
+                return res.send({message:'Please a use supported file format. You can add a picture, audio or video if available.'})
             }
              }
                
@@ -176,7 +176,7 @@ module.exports={
                  let media =  req.files.media
                fileName = Date.now() + '-' +  media.name
             
-               media.mv('./uploads/accident/'+fileName, (err)=>{
+               media.mv('./public/uploads/accident/'+fileName, (err)=>{
                  if(err) res.send(err.message)           
                })
             }
@@ -265,7 +265,7 @@ module.exports={
                  let media =  req.files.media
                fileName = Date.now() + '-' +  media.name
             
-               media.mv('./uploads/health/'+fileName, (err)=>{
+               media.mv('./public/uploads/health/'+fileName, (err)=>{
                  if(err) res.send(err.message)           
                })
             }
@@ -341,7 +341,7 @@ module.exports={
                  let media =  req.files.media
                fileName = Date.now() + '-' +  media.name
             
-               media.mv('./uploads/security/'+fileName, (err)=>{
+               media.mv('./public/uploads/security/'+fileName, (err)=>{
                  if(err) res.send(err.message)           
                })
             }
@@ -413,7 +413,7 @@ module.exports={
                  let media =  req.files.media
                fileName = Date.now() + '-' +  media.name
             
-               media.mv('./uploads/environment/'+fileName, (err)=>{
+               media.mv('./public/uploads/environment/'+fileName, (err)=>{
                  if(err) res.send(err.message)           
                })
             }
@@ -485,7 +485,7 @@ module.exports={
                  let media =  req.files.media
                fileName = Date.now() + '-' +  media.name
             
-               media.mv('./uploads/emergency/'+fileName, (err)=>{
+               media.mv('./public/uploads/emergency/'+fileName, (err)=>{
                  if(err) res.send(err.message)           
                })
             }
@@ -578,7 +578,7 @@ module.exports={
                  let media =  req.files.media
                fileName = Date.now() + '-' +  media.name
             
-               media.mv('./uploads/product/'+fileName, (err)=>{
+               media.mv('./public/uploads/product/'+fileName, (err)=>{
                  if(err) res.send(err.message)           
                })
             }
@@ -645,7 +645,7 @@ module.exports={
                  let media =  req.files.media
                fileName = Date.now() + '-' +  media.name
             
-               media.mv('./uploads/service/'+fileName, (err)=>{
+               media.mv('./public/uploads/service/'+fileName, (err)=>{
                  if(err) res.send(err.message)           
                })
             }

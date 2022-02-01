@@ -94,7 +94,7 @@ router.get('/test-token',authenticationToken,(req, res)=>{
  * /profile:
  *     get:
  *       summary: Get profile.
- *       description: get user profile by id passed from token decoded. It looks into the authorization header for token.
+ *       description: get user profile by id passed from token decoded. It looks into the authorization header for token. the profile is read from 'uploads/profile/{{picture}}
  *       
  *       responses:
  *         200:
@@ -110,10 +110,10 @@ router.get('/profile',  authenticationToken, getProfile, ()=>{})
  * /profile-update:
  *     post:
  *       summary: update profile.
- *       description: uses the bearer method in the header to get and decode to for user auth. Takes the user id from the decoded token and find the right user
+ *       description: uses the bearer method in the header to get and decode to for user auth. Takes the user id from the decoded token and find the right user. Add keyword "picture" as the form-name to receive the profile picture.
  *       requestBody:
  *         
- *            application/json:
+ *            multiparts/form-data:
  *             schema:
  *              properties:
  *                phone:

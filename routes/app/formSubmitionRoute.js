@@ -58,6 +58,9 @@ const {
  *       report:
  *         type: string
  *         description: user report
+ *       media:
+ *         type: string
+ *         description: takes uploaded file, supported files are mp3,mp4,jpeg,jpg,gif, png
  *     accident:
  *       types: object
  *       properties:
@@ -97,6 +100,9 @@ const {
  *        report:
  *         type: string
  *         description: user report
+ *        media:
+ *         type: string
+ *         description: takes uploaded file, supported files are mp3,mp4,jpeg,jpg,gif, png
  *     emergencyReport:
  *       types: object
  *       properties:
@@ -142,6 +148,9 @@ const {
  *        report:
  *         type: string
  *         description: user report
+ *        media:
+ *         type: string
+ *         description: takes uploaded file, supported files are mp3,mp4,jpeg,jpg,gif, png
  *     environmentalReport:
  *       types: object
  *       properties:
@@ -187,6 +196,9 @@ const {
  *        report:
  *         type: string
  *         description: user report
+ *        media:
+ *         type: string
+ *         description: takes uploaded file, supported files are mp3,mp4,jpeg,jpg,gif, png
  *     healthReport:
  *       types: object
  *       properties:
@@ -238,6 +250,9 @@ const {
  *        report:
  *         type: string
  *         description: user report
+ *        media:
+ *         type: string
+ *         description: takes uploaded file, supported files are mp3,mp4,jpeg,jpg,gif, png
  *     productComplaint:
  *      types: object
  *      properties:
@@ -286,6 +301,9 @@ const {
  *       anonymous:
  *         type: string
  *         description: anonimous? yes or no
+ *       media:
+ *         type: string
+ *         description: takes uploaded file, supported files are mp3,mp4,jpeg,jpg,gif, png
  *     securityReport:
  *      types: object
  *      properties:
@@ -331,6 +349,9 @@ const {
  *       report:
  *         type: string
  *         description: user report
+ *       media:
+ *         type: string
+ *         description: takes uploaded file, supported files are mp3,mp4,jpeg,jpg,gif, png
  *     serviceComplaint:
  *      types: object
  *      properties:
@@ -376,6 +397,9 @@ const {
  *       anonymous:
  *         type: string
  *         description: anonimous? yes or no
+ *       media:
+ *         type: string
+ *         description: takes uploaded file, supported files are mp3,mp4,jpeg,jpg,gif, png
  *   
  */
 
@@ -384,10 +408,10 @@ const {
  /incident:
  *     post:
  *       summary: Incident form.
- *       description: Key in incident data
+ *       description: Post the form with all required data types. The file uplaod form sould be named "media"
  *       requestBody:
  *          content:
- *            application/json:
+ *            multiparts/form-data:
  *             schema:
  *              properties:
  *                name:
@@ -420,6 +444,9 @@ const {
  *                anonymous:
  *                  type: string
  *                  description: anonimous? yes or no
+ *                media:
+ *                  type: string
+ *                  description: takes uploaded file, supported files are mp3,mp4,jpeg,jpg,gif, png    
  *                report:
  *                  type: string
  *                  description: user report
@@ -439,10 +466,10 @@ router.post('/incident', authenticationToken, Incident, () => {})
  /accident:
  *     post:
  *       summary: accident form.
- *       description: Key in accident data
+ *       description: Post the form with all required data types. The file uplaod form sould be named "media"
  *       requestBody:
  *          content:
- *            application/json:
+ *            multiparts/form-data:
  *             schema:
  *               $ref: '#/components/schemas/accident'
  *       responses:
@@ -460,10 +487,10 @@ router.post('/accident', authenticationToken, accident, () => {})
  /health-report:
  *     post:
  *       summary: Health report
- *       description: Health report
+ *       description: Post the form with all required data types. The file uplaod form sould be named "media"
  *       requestBody:
  *          content:
- *            application/json:
+ *            multiparts/form-data:
  *             schema:
  *               $ref: '#/components/schemas/healthReport'
  *       responses:
@@ -480,10 +507,10 @@ router.post('/health-report',  authenticationToken, healthReport, () => {})
  /security:
  *     post:
  *       summary: security report
- *       description: security report
+ *       description: Post the form with all required data types. The file uplaod form sould be named "media"
  *       requestBody:
  *          content:
- *            application/json:
+ *            multiparts/form-data:
  *             schema:
  *               $ref: '#/components/schemas/securityReport'
  *       responses:
@@ -501,10 +528,10 @@ router.post('/security', authenticationToken, security, () => {})
  /environmental-report:
  *     post:
  *       summary: Environmental report
- *       description: environmental report
+ *       description: Post the form with all required data types. The file uplaod form sould be named "media"
  *       requestBody:
  *          content:
- *            application/json:
+ *            multiparts/form-data:
  *             schema:
  *               $ref: '#/components/schemas/environmentalReport'
  *       responses:
@@ -521,10 +548,10 @@ router.post('/environmental-report', authenticationToken, envReport, () => {})
  /emergency-report:
  *     post:
  *       summary: Emergency report
- *       description: Emergency report
+ *       description: Post the form with all required data types. The file uplaod form sould be named "media"
  *       requestBody:
  *          content:
- *            application/json:
+ *            multiparts/form-data:
  *             schema:
  *               $ref: '#/components/schemas/emergencyReport'
  *       responses:
@@ -540,10 +567,10 @@ router.post('/emergency-report', authenticationToken, emergReport, () => {})
  /product-complaint:
  *     post:
  *       summary: Product Complaint
- *       description: product Complaint
+ *       description: Post the form with all required data types. The file uplaod form sould be named "media"
  *       requestBody:
  *          content:
- *            application/json:
+ *            multiparts/form-data:
  *             schema:
  *               $ref: '#/components/schemas/productComplaint'
  *       responses:
@@ -560,10 +587,10 @@ router.post('/product-complaint',authenticationToken, prodComplaint, () => {})
  /service-complaint:
  *     post:
  *       summary: Service Complaint
- *       description: service Complaint
+ *       description: Post the form with all required data types. The file uplaod form sould be named "media"
  *       requestBody:
  *          content:
- *            application/json:
+ *            multiparts/form-data:
  *             schema:
  *               $ref: '#/components/schemas/serviceComplaint'
  *       responses:

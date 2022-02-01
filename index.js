@@ -21,7 +21,7 @@ const swaggerUi = require('swagger-ui-express')
 const swaggerJsdoc = require('swagger-jsdoc')
 const server = http.createServer(App)
 const io = socketio(server)
-const initFireBase = require("./Notifications/firebase")
+// const initFireBase = require("./Notifications/firebase")
 
 
 
@@ -71,7 +71,7 @@ mongoose.connect(process.env.prod_URI, {
 App.use(Express.static(path.join(__dirname, 'public')))
 
 //Firebase init
-initFireBase()
+// initFireBase()
 
 
 // Set view engine
@@ -138,14 +138,18 @@ const botName = 'Siara Bot'
 let logedInUser;
 io.on('connection',  async socket=>{
      
-    var userId = await socket.request.session.passport.user;
-    await user.findOne({_id:userId}).then(user=>{
-        // console.log(user.name)
-        return logedInUser = user
-    })
-    .catch(err=>{
-        console.log(err.message)
-    })
+    async (req, res, next )=>{
+        const userId = req.user.User._id
+        await user.findOne({_id:userId}).then(user=>{
+            // console.log(user.name)
+            return logedInUser = user
+        })
+        .catch(err=>{
+            console.log(err.message)
+        })
+        next()
+    }
+    
 
    
     
@@ -169,9 +173,9 @@ io.on('connection',  async socket=>{
  
 })
 
-const port = process.env.PORT || 3200;
+const port = process.env.PORT || 3600;
 
 server.listen(port, () => {
 
-    console.log(`listening on port 3200`);
+    console.log(`listening on port 3600`);
 })

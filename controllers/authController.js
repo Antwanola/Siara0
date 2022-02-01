@@ -3,9 +3,13 @@ const createError = require('http-errors');
 const user = require('../models/user')
 require('dotenv').config();
 const tokenStore = require('../models/tokenStore')
-const fs = require('fs')
+
 const {isEmpty} = require('../helpers/formHelpers')
-const {sendNotification}  = require('../Notifications/firebase')
+// const {sendNotification}  = require('../Notifications/firebase')
+const path = require('path')
+
+
+
 
 function generateToken(User){
   return  Jwt.sign({User}, process.env.SECRETE_TOKEN, {expiresIn: 1000 * 60 * 60 * 24*30})
@@ -98,19 +102,26 @@ getProfile:(req, res, next)=>{
 
 updateProfile:(req, res, next)=>{
   const userId = req.user.User._id  
+  console.log(userId)
   user.findOne({_id:userId}).then(User=>{
-    // console.log({name:req.body.name})
+    console.log({name:req.body.name})
     User.email = req.body.email,
     User.phone = req.body.phone,
     User.name = req.body.name
       if(!isEmpty(req.files)){
-      let picture =  req.files.picture
-      let fileName = Date.now() + '-' +  picture.name
-      picture.mv('./uploads/profile/'+fileName, (err)=>{
-        if(err) throw err
         
-      })
-    User.picture = fileName
+        filetypes = /jpg|gif|jpeg|png|PNG|JPG|GIF|JPEG|MP3|MP4|mp3|mp4/
+       //  console.log( filetypes.test(path.extname(req.files.media.name)))
+        if(filetypes.test(path.extname(req.files.picture.name))){
+            let Picture =  req.files.picture
+          fileName = Date.now() + '-' +  Picture.name
+       
+          Picture.mv('./public/uploads/profile/'+fileName, (err, )=>{
+            if(err) res.send(err.message)           
+            
+          })
+       }
+       User.picture = fileName
     User.save().then(saved=>{
       console.log(saved)
     })
