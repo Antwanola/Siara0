@@ -43,7 +43,7 @@ register:(req, res, next)=>{
     }
        else{
         if(payload.phone == User.phone || payload.email == User.email){
-            res.status(403).send('User already exist ')
+            res.send('User already exist ')
         }
     }
      
