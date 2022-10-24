@@ -58,6 +58,10 @@ mongoose.connect(process.env.prod_URI, {
             servers:[
                 {
                     url: 'http://localhost:3200/api'
+                },
+
+                {
+                    url: 'https://siara-health.herokuapp.com/api'
                 }
             ]
             
