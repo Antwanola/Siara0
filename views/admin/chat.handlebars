@@ -1,4 +1,4 @@
-{{!-- 
+{{! 
    
     <title>Siara app</title>
   </head>
@@ -29,55 +29,59 @@
           <button class="btn"><i class="fas fa-paper-plane"></i> Send</button>
         </form>
       </div>
-    </div> --}}
+    </div> }}
 
-   
-  
-
-  <main class="msger-chat">
-    <div class="msg left-msg">
-      <div
-       class="msg-img"
-       style="background-image: url(https://image.flaticon.com/icons/svg/327/327779.svg)"
-      ></div>
-
-      <div class="msg-bubble">
-        <div class="msg-info">
-          <div class="msg-info-name">BOT</div>
-          <div class="msg-info-time">12:45</div>
-        </div>
-
-        <div class="msg-text">
-          Hi, welcome to SimpleChat! Go ahead and send me a message. 😄
-        </div>
+<main class="msger-chat">
+  <div class="container">
+    <div class="msg left-chat">
+      <div class="msg_time_img">
+        <img src="/images/image.png" alt="" class="img_info-left" />
+        <div class="msg-info-time">12:45</div>
       </div>
+
+      <div class="msg-left">
+        <span class="msg-info-name">BOT</span>
+        <p class="left-text">
+          Hi, welcome to SimpleChat! Go ahead and send me a message. 😄 Lorem
+          ipsum dolor, sit amet consectetur adipisicing elit. Adipisci voluptate
+          quod dignissimos fugiat exercitationem rem impedit debitis reiciendis,
+          maxime iusto optio saepe! Atque tempore eum molestiae earum culpa, qui
+          illum.
+        </p>
+      </div>
+
     </div>
 
-    <div class="msg right-msg">
-      <div
-       class="msg-img"
-       style="background-image: url(https://image.flaticon.com/icons/svg/145/145867.svg)"
-      ></div>
-
-      <div class="msg-bubble">
-        <div class="msg-info">
-          <div class="msg-info-name">Sajad</div>
-          <div class="msg-info-time">12:46</div>
-        </div>
-
-        <div class="msg-text">
-          You can change your name in JS section!
-        </div>
+   <div class=" right-chat">
+      <div class="msg_time_img">
+        <img src="/images/image.png" alt="" class="img_info-right" />
+        <div class="msg-info-time">12:45</div>
       </div>
+
+      <div class="msg-right">
+        <span class="msg-info-name">BOT</span>
+        <p class="right-text">
+          Hi, welcome to SimpleChat! Go ahead and send me a message. 😄 Lorem
+          ipsum dolor, sit amet consectetur adipisicing elit. Adipisci voluptate
+          quod dignissimos fugiat exercitationem rem impedit debitis reiciendis,
+          maxime iusto optio saepe! Atque tempore eum molestiae earum culpa, qui
+          illum.
+        </p>
+      </div>
+
     </div>
-  </main>
 
-  <form class="msger-inputarea" content="width=device-width">
-    <input type="text" class="msger-input" placeholder="Enter your message...">
-    <button type="submit" class="msger-send-btn">Send</button>
-  </form>
+  </div>
 
-  
+  <div class="form">
+    <form class="inputarea" content="width=device-width">
+      <input
+        type="text"
+        class="msger-input"
+        placeholder="Enter your message..."
+      />
+      <button type="submit" class="msger-send-btn">Send</button>
+    </form>
+  </div>
 
-
-  
+</main>
